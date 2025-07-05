@@ -49,11 +49,28 @@ PACKAGES=(
     "grim"
     "slurp"
     "wl-clipboard"
+    
+    # Image tools for AI Themer
+    "imagemagick"
+    "libnotify"
+    
+    # Python packages for AI Themer
+    "python"
+    "python-pillow"
+    "python-scikit-learn"
+    "python-numpy"
+    "python-jinja"
+    "python-click"
+    "python-rich"
+    "python-yaml"
+    "python-watchdog"
+    "python-colorthief"
 )
 
 AUR_PACKAGES=(
     "hyprpicker"
     "wlogout"
+    "python-colorspacious"
 )
 
 # Install packages
@@ -76,6 +93,61 @@ for dir in config/*/; do
     fi
 done
 
+# Setup wallpapers directory
+echo "🖼️  Setting up wallpapers directory..."
+mkdir -p wallpapers/{nature,cyberpunk,abstract,minimal,space,cityscape}
+chmod 755 wallpapers/{nature,cyberpunk,abstract,minimal,space,cityscape}
+echo "   ✅ Wallpapers categories created"
+
+# Setup AI Themer
+echo "🎨 Setting up AI Themer..."
+cd ai-themer
+echo "   Testing AI Themer installation..."
+if python demo_simulation.py > /dev/null 2>&1; then
+    echo "   ✅ AI Themer demo works perfectly"
+else
+    echo "   ⚠️  AI Themer demo failed - check dependencies"
+fi
+
+# Test full CLI functionality
+echo "   Testing full CLI functionality..."
+if python -m src.ai_themer.cli --help > /dev/null 2>&1; then
+    echo "   ✅ AI Themer CLI is ready"
+    echo "   📖 Run 'python demo_simulation.py' to see it in action"
+    echo "   🎯 Add wallpapers to ../wallpapers/nature/ (or other categories) to use it"
+else
+    echo "   ⚠️  AI Themer CLI failed - some dependencies might be missing"
+fi
+
+# Create Rofi launcher script
+echo "   Creating Rofi launcher script..."
+mkdir -p ~/.local/bin
+cat > ~/.local/bin/ai-themer-pick << 'EOF'
+#!/bin/bash
+# AI Themer Rofi Wallpaper Picker
+cd "$(dirname "$(readlink -f "$0")")/../../../aihypr/ai-themer" 2>/dev/null || cd "$HOME/aihypr/ai-themer"
+python -m src.ai_themer.cli pick --wallpaper-dir ../wallpapers/
+EOF
+chmod +x ~/.local/bin/ai-themer-pick
+echo "   ✅ Rofi launcher created at ~/.local/bin/ai-themer-pick"
+
+# Add Hyprland keybind
+echo "   Adding Hyprland keybind..."
+if [ -f ~/.config/hypr/conf/keybindings.conf ]; then
+    if ! grep -q "ai-themer-pick" ~/.config/hypr/conf/keybindings.conf; then
+        echo "" >> ~/.config/hypr/conf/keybindings.conf
+        echo "# AI Themer wallpaper picker" >> ~/.config/hypr/conf/keybindings.conf
+        echo "bind = SUPER, W, exec, ai-themer-pick" >> ~/.config/hypr/conf/keybindings.conf
+        echo "   ✅ Added SUPER+W keybind for wallpaper picker"
+    else
+        echo "   ✅ Keybind already exists"
+    fi
+else
+    echo "   ⚠️  Hyprland keybindings.conf not found - add manually: bind = SUPER, W, exec, ai-themer-pick"
+fi
+
+cd ..
+
 # Set fish as default shell
 echo "🐟 Setting fish as default shell..."
 if ! grep -q "$(which fish)" /etc/shells; then
@@ -84,4 +156,23 @@ fi
 chsh -s "$(which fish)"
 
 echo "✅ Installation complete!"
-echo "📝 Please reboot or log out and back in to use fish shell" 
+echo "📝 Please reboot or log out and back in to use fish shell"
+echo ""
+echo "🎨 AI Themer is now available:"
+echo "   • Run 'cd ai-themer && python demo_simulation.py' to see a demo"
+echo "   • Add your wallpapers to the appropriate category folders"
+echo "   • Launch Rofi picker: 'ai-themer-pick' (or use keyboard shortcut)"
+echo "   • All Python dependencies are installed - no pip needed!"
+echo ""
+echo "🖼️  Rofi Wallpaper Picker:"
+echo "   • Command: ai-themer-pick"
+echo "   • Features: Thumbnails, categories, instant theme application"
+echo "   • Add to Hyprland keybind: bind = SUPER, W, exec, ai-themer-pick"
+echo ""
+echo "📂 Wallpapers categories:"
+echo "   wallpapers/nature/     - 🌲 Forests, mountains, landscapes"
+echo "   wallpapers/cyberpunk/  - 🌃 Neon cities, futuristic themes"
+echo "   wallpapers/abstract/   - 🎨 Geometric shapes, patterns"
+echo "   wallpapers/minimal/    - ⚪ Clean, simple designs"
+echo "   wallpapers/space/      - 🌌 Cosmic, stars, galaxies"
+echo "   wallpapers/cityscape/  - 🏙️ Urban landscapes, skylines" 
