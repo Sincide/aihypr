@@ -9,17 +9,21 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Update mirrors with reflector for Sweden
 echo "📡 Setting up mirrors for Sweden..."
-sudo pacman -S reflector --noconfirm
+sudo pacman -S --needed reflector --noconfirm
 sudo reflector --country Sweden --latest 5 --sort rate --save /etc/pacman.d/mirrorlist
 sudo pacman -Syyu --noconfirm
 
-# Install yay-bin
-echo "📦 Installing yay-bin..."
-cd /tmp
-git clone https://aur.archlinux.org/yay-bin.git
-cd yay-bin
-makepkg -si --noconfirm
-cd ~
+# Install yay-bin if not already installed
+if ! command -v yay &> /dev/null; then
+    echo "📦 Installing yay-bin..."
+    cd /tmp
+    git clone https://aur.archlinux.org/yay-bin.git
+    cd yay-bin
+    makepkg -si --noconfirm
+    cd ~
+else
+    echo "📦 yay-bin already installed, skipping..."
+fi
 
 # Package lists - easy to modify
 PACKAGES=(
@@ -78,10 +82,10 @@ AUR_PACKAGES=(
 
 # Install packages
 echo "📦 Installing packages..."
-yay -S --noconfirm "${PACKAGES[@]}"
+yay -S --needed --noconfirm "${PACKAGES[@]}"
 
 echo "📦 Installing AUR packages..."
-yay -S --noconfirm "${AUR_PACKAGES[@]}"
+yay -S --needed --noconfirm "${AUR_PACKAGES[@]}"
 
 # Setup configs
 echo "🔗 Setting up configuration symlinks..."
