@@ -214,6 +214,24 @@ class ThemeApplier:
     
     def _generate_swaync_css(self, palette: ColorPalette) -> str:
         """Generate SwayNC CSS with custom properties."""
+        from .color_types import ColorRole
+        
+        # Helper function to get color safely
+        def get_color_hex(role: ColorRole, fallback_hex: str = "#1e1e2e") -> str:
+            color = palette.get_color(role)
+            return color.hex if color else fallback_hex
+        
+        # Get colors using ColorRole enum
+        bg_color = get_color_hex(ColorRole.BACKGROUND, "#1e1e2e")
+        surface_color = get_color_hex(ColorRole.SURFACE, "#313244")
+        text_color = get_color_hex(ColorRole.TEXT, "#cdd6f4")
+        primary_color = get_color_hex(ColorRole.PRIMARY, "#89b4fa")
+        accent_color = get_color_hex(ColorRole.ACCENT, primary_color)  # Fallback to primary
+        
+        # Use warning/error colors if available, otherwise use primary colors
+        warning_color = get_color_hex(ColorRole.WARNING, "#f9e2af")
+        error_color = get_color_hex(ColorRole.ERROR, "#f38ba8")
+        
         # Convert colors to CSS custom properties
         css_vars = []
         css_vars.append("/* SwayNotificationCenter Colors */")
@@ -221,41 +239,41 @@ class ThemeApplier:
         css_vars.append("")
         css_vars.append(":root {")
         css_vars.append("  /* Base colors */")
-        css_vars.append(f"  --bg-primary: {palette.background.hex};")
-        css_vars.append(f"  --bg-secondary: {palette.surface.hex};")
-        css_vars.append(f"  --bg-hover: {palette.surface.hex};")
-        css_vars.append(f"  --fg-primary: {palette.foreground.hex};")
-        css_vars.append(f"  --fg-secondary: {palette.text.hex};")
-        css_vars.append(f"  --border-color: {palette.surface.hex};")
+        css_vars.append(f"  --bg-primary: {bg_color};")
+        css_vars.append(f"  --bg-secondary: {surface_color};")
+        css_vars.append(f"  --bg-hover: {surface_color};")
+        css_vars.append(f"  --fg-primary: {text_color};")
+        css_vars.append(f"  --fg-secondary: {text_color};")
+        css_vars.append(f"  --border-color: {surface_color};")
         css_vars.append("")
         css_vars.append("  /* Accent colors */")
-        css_vars.append(f"  --accent-color: {palette.accent.hex};")
-        css_vars.append(f"  --accent-hover: {palette.accent.hex};")
-        css_vars.append(f"  --fg-accent: {palette.background.hex};")
+        css_vars.append(f"  --accent-color: {accent_color};")
+        css_vars.append(f"  --accent-hover: {accent_color};")
+        css_vars.append(f"  --fg-accent: {bg_color};")
         css_vars.append("")
         css_vars.append("  /* Urgency colors */")
-        css_vars.append(f"  --low-border: {palette.text.hex};")
-        css_vars.append(f"  --normal-border: {palette.accent.hex};")
-        css_vars.append(f"  --critical-border: {palette.red.hex};")
-        css_vars.append(f"  --critical-bg: {palette.background.hex};")
-        css_vars.append(f"  --critical-fg: {palette.red.hex};")
+        css_vars.append(f"  --low-border: {text_color};")
+        css_vars.append(f"  --normal-border: {accent_color};")
+        css_vars.append(f"  --critical-border: {error_color};")
+        css_vars.append(f"  --critical-bg: {bg_color};")
+        css_vars.append(f"  --critical-fg: {error_color};")
         css_vars.append("")
         css_vars.append("  /* State colors */")
-        css_vars.append(f"  --bg-critical: {palette.red.hex};")
-        css_vars.append(f"  --bg-critical-hover: {palette.red.hex};")
-        css_vars.append(f"  --fg-critical: {palette.background.hex};")
+        css_vars.append(f"  --bg-critical: {error_color};")
+        css_vars.append(f"  --bg-critical-hover: {error_color};")
+        css_vars.append(f"  --fg-critical: {bg_color};")
         css_vars.append("")
-        css_vars.append(f"  --bg-warning: {palette.yellow.hex};")
-        css_vars.append(f"  --bg-warning-hover: {palette.yellow.hex};")
-        css_vars.append(f"  --fg-warning: {palette.background.hex};")
+        css_vars.append(f"  --bg-warning: {warning_color};")
+        css_vars.append(f"  --bg-warning-hover: {warning_color};")
+        css_vars.append(f"  --fg-warning: {bg_color};")
         css_vars.append("")
-        css_vars.append(f"  --bg-success: {palette.green.hex};")
-        css_vars.append(f"  --bg-success-hover: {palette.green.hex};")
-        css_vars.append(f"  --fg-success: {palette.background.hex};")
+        css_vars.append(f"  --bg-success: {primary_color};")
+        css_vars.append(f"  --bg-success-hover: {primary_color};")
+        css_vars.append(f"  --fg-success: {bg_color};")
         css_vars.append("")
-        css_vars.append(f"  --bg-info: {palette.cyan.hex};")
-        css_vars.append(f"  --bg-info-hover: {palette.cyan.hex};")
-        css_vars.append(f"  --fg-info: {palette.background.hex};")
+        css_vars.append(f"  --bg-info: {accent_color};")
+        css_vars.append(f"  --bg-info-hover: {accent_color};")
+        css_vars.append(f"  --fg-info: {bg_color};")
         css_vars.append("}")
         css_vars.append("")
         
