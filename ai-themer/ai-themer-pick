@@ -1,0 +1,8 @@
+#!/bin/bash
+# AI Themer Rofi Wallpaper Picker
+# Suppress Python warnings and ensure config directory exists
+export PYTHONWARNINGS="ignore::SyntaxWarning"
+mkdir -p ~/.config/ai-themer
+mkdir -p ~/.cache/rofi
+cd "/mnt/Stuff/AI_creations/aihypr/ai-themer"
+python src/ai_themer/rofi_picker.py "/mnt/Stuff/AI_creations/aihypr/wallpapers" --template-dir "/mnt/Stuff/AI_creations/aihypr/ai-themer/templates" 
