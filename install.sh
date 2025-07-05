@@ -37,8 +37,15 @@ PACKAGES=(
     "swaync"
     
     # Fonts
-    "ttf-jetbrains-mono-nerd"
-    "ttf-font-awesome"
+    "ttf-jetbrains-mono-nerd"    # Main terminal/coding font (Alacritty, SwayNC)
+    "ttf-font-awesome"           # Icons for Waybar
+    "ttf-roboto"                 # UI font for Waybar
+    "ttf-roboto-mono"            # Monospace fallback
+    "noto-fonts"                 # Wide character support
+    "noto-fonts-emoji"           # Emoji support
+    "noto-fonts-extra"           # Additional language support
+    "ttf-liberation"             # Microsoft font alternatives
+    "ttf-dejavu"                 # Good fallback fonts
     
     # Tools
     "zoxide"
@@ -78,6 +85,7 @@ AUR_PACKAGES=(
     "hyprpicker"
     "wlogout"
     "python-colorspacious"
+    "ttf-material-design-icons"      # Additional icon fonts
 )
 
 # Install packages
@@ -182,4 +190,12 @@ echo "   wallpapers/cyberpunk/  - 🌃 Neon cities, futuristic themes"
 echo "   wallpapers/abstract/   - 🎨 Geometric shapes, patterns"
 echo "   wallpapers/minimal/    - ⚪ Clean, simple designs"
 echo "   wallpapers/space/      - 🌌 Cosmic, stars, galaxies"
-echo "   wallpapers/cityscape/  - 🏙️ Urban landscapes, skylines" 
+echo "   wallpapers/cityscape/  - 🏙️ Urban landscapes, skylines"
+echo ""
+echo "🔤 Fonts installed:"
+echo "   • JetBrains Mono Nerd Font (terminal, coding)"
+echo "   • Font Awesome (icons)"
+echo "   • Roboto (UI elements)"
+echo "   • Noto Fonts (wide character support + emoji)"
+echo "   • Liberation & DejaVu (fallback fonts)"
+echo "   • Material Design Icons (additional icons)" 
