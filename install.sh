@@ -192,6 +192,35 @@ fi
 
 cd "$SCRIPT_DIR"
 
+# Setup Git
+echo "🔧 Setting up Git configuration..."
+if ! git config --global user.name > /dev/null 2>&1; then
+    echo "   Git user.name not configured"
+    read -p "   Enter your Git username: " git_username
+    git config --global user.name "$git_username"
+    echo "   ✅ Git username set to: $git_username"
+else
+    existing_name=$(git config --global user.name)
+    echo "   ✅ Git username already set to: $existing_name"
+fi
+
+if ! git config --global user.email > /dev/null 2>&1; then
+    echo "   Git user.email not configured"
+    read -p "   Enter your Git email: " git_email
+    git config --global user.email "$git_email"
+    echo "   ✅ Git email set to: $git_email"
+else
+    existing_email=$(git config --global user.email)
+    echo "   ✅ Git email already set to: $existing_email"
+fi
+
+# Set some useful Git defaults
+echo "   Setting up Git defaults..."
+git config --global init.defaultBranch main
+git config --global pull.rebase false
+git config --global core.editor nvim
+echo "   ✅ Git defaults configured (main branch, merge pulls, nvim editor)"
+
 # Setup SSH
 echo "🔐 Setting up SSH..."
 # Enable SSH service
