@@ -126,8 +126,8 @@ class ThemeApplier:
             name="alacritty",
             template_path="alacritty/colors.toml.j2",
             output_path=os.path.join(home, ".config/alacritty/colors.toml"),
-            reload_command="pkill -USR1 alacritty",  # Force reload all Alacritty windows
-            reload_delay=0.5
+            reload_command=None,  # Alacritty has live_config_reload enabled by default
+            reload_delay=0.1
         )
         
         # Rofi
@@ -252,6 +252,8 @@ class ThemeApplier:
         try:
             with open(config.output_path, 'w') as f:
                 f.write(rendered)
+                f.flush()  # Ensure data is written to disk
+                os.fsync(f.fileno())  # Force write to disk for live reload
             
             self.logger.info(f"Applied theme to {app_name}: {config.output_path}")
             
@@ -264,34 +266,41 @@ class ThemeApplier:
                 error=f"Failed to write config file: {e}"
             )
         
-        # Reload application if requested
+        # Handle application reload
         reloaded = False
         reload_output = None
-        if reload_application and config.reload_command:
-            try:
-                # Wait for file to be written
+        if reload_application:
+            if config.reload_command:
+                try:
+                    # Wait for file to be written
+                    time.sleep(config.reload_delay)
+                    
+                    # Execute reload command
+                    result = subprocess.run(
+                        config.reload_command,
+                        shell=True,
+                        capture_output=True,
+                        text=True,
+                        timeout=30
+                    )
+                    
+                    reloaded = True
+                    reload_output = result.stdout if result.stdout else result.stderr
+                    
+                    self.logger.info(f"Reloaded {app_name} (exit code: {result.returncode})")
+                    
+                except subprocess.TimeoutExpired:
+                    reload_output = "Reload command timed out"
+                    self.logger.warning(f"Reload command for {app_name} timed out")
+                except Exception as e:
+                    reload_output = str(e)
+                    self.logger.error(f"Failed to reload {app_name}: {e}")
+            else:
+                # For applications with live reload (like Alacritty), just wait for the change to be detected
                 time.sleep(config.reload_delay)
-                
-                # Execute reload command
-                result = subprocess.run(
-                    config.reload_command,
-                    shell=True,
-                    capture_output=True,
-                    text=True,
-                    timeout=30
-                )
-                
                 reloaded = True
-                reload_output = result.stdout if result.stdout else result.stderr
-                
-                self.logger.info(f"Reloaded {app_name} (exit code: {result.returncode})")
-                
-            except subprocess.TimeoutExpired:
-                reload_output = "Reload command timed out"
-                self.logger.warning(f"Reload command for {app_name} timed out")
-            except Exception as e:
-                reload_output = str(e)
-                self.logger.error(f"Failed to reload {app_name}: {e}")
+                reload_output = "Live reload (automatic)"
+                self.logger.info(f"Applied theme to {app_name} with live reload")
         
         return ThemeApplication(
             app_name=app_name,
