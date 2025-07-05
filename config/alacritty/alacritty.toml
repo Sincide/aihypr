@@ -1,0 +1,112 @@
+# Alacritty Configuration
+# https://alacritty.org/config-alacritty.html
+
+import = ["colors.toml"]
+
+[env]
+TERM = "xterm-256color"
+
+[window]
+dimensions = { columns = 0, lines = 0 }
+position = "None"
+padding = { x = 6, y = 6 }
+dynamic_padding = false
+decorations = "full"
+opacity = 0.95
+blur = false
+startup_mode = "Windowed"
+title = "Alacritty"
+dynamic_title = true
+class = { instance = "Alacritty", general = "Alacritty" }
+decorations_theme_variant = "None"
+
+[scrolling]
+history = 10000
+multiplier = 3
+
+[font]
+normal = { family = "JetBrains Mono", style = "Regular" }
+bold = { family = "JetBrains Mono", style = "Bold" }
+italic = { family = "JetBrains Mono", style = "Italic" }
+bold_italic = { family = "JetBrains Mono", style = "Bold Italic" }
+size = 12.0
+offset = { x = 0, y = 0 }
+glyph_offset = { x = 0, y = 0 }
+builtin_box_drawing = true
+
+[selection]
+semantic_escape_chars = ",│`|:\"' ()[]{}<>\t"
+save_to_clipboard = false
+
+[cursor]
+style = { shape = "Block", blinking = "Off" }
+vi_mode_style = "None"
+blink_interval = 750
+blink_timeout = 5
+unfocused_hollow = true
+thickness = 0.15
+
+[terminal]
+osc52 = "OnlyCopy"
+
+[mouse]
+hide_when_typing = false
+bindings = [
+    { mouse = "Middle", action = "PasteSelection" },
+    { mouse = "Right", action = "ExpandSelection" },
+]
+
+[hints]
+alphabet = "jfkdls;ahgurieowpq"
+
+[[hints.enabled]]
+regex = "(ipfs:|ipns:|magnet:|mailto:|gemini:|gopher:|https:|http:|news:|file:|git:|ssh:|ftp:)[^\u0000-\u001f\u007f-\u009f<>\"\\s{-}\\^⟨⟩`]+"
+command = "xdg-open"
+post_processing = true
+mouse.enabled = true
+binding = { key = "U", mods = "Control|Shift" }
+
+[keyboard]
+bindings = [
+    # Clipboard
+    { key = "C", mods = "Control|Shift", action = "Copy" },
+    { key = "V", mods = "Control|Shift", action = "Paste" },
+    { key = "Insert", mods = "Shift", action = "PasteSelection" },
+    
+    # Search
+    { key = "F", mods = "Control|Shift", action = "SearchForward" },
+    { key = "B", mods = "Control|Shift", action = "SearchBackward" },
+    
+    # Font Size
+    { key = "Plus", mods = "Control", action = "IncreaseFontSize" },
+    { key = "Minus", mods = "Control", action = "DecreaseFontSize" },
+    { key = "Key0", mods = "Control", action = "ResetFontSize" },
+    
+    # Scrolling
+    { key = "K", mods = "Control|Shift", action = "ScrollLineUp" },
+    { key = "J", mods = "Control|Shift", action = "ScrollLineDown" },
+    { key = "PageUp", mods = "Shift", action = "ScrollPageUp" },
+    { key = "PageDown", mods = "Shift", action = "ScrollPageDown" },
+    { key = "Home", mods = "Shift", action = "ScrollToTop" },
+    { key = "End", mods = "Shift", action = "ScrollToBottom" },
+    
+    # Vi Mode
+    { key = "Space", mods = "Control|Shift", action = "ToggleViMode" },
+    
+    # Window Management
+    { key = "Return", mods = "Control|Shift", action = "SpawnNewInstance" },
+    { key = "N", mods = "Control|Shift", action = "SpawnNewInstance" },
+    { key = "Q", mods = "Control|Shift", action = "Quit" },
+    { key = "W", mods = "Control|Shift", action = "Quit" },
+    { key = "F11", action = "ToggleFullscreen" },
+]
+
+
+
+[debug]
+render_timer = false
+persistent_logging = false
+log_level = "Warn"
+print_events = false
+highlight_damage = false
+prefer_egl = false 

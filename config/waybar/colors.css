@@ -1,0 +1,74 @@
+/* Waybar Colors Configuration */
+/* Catppuccin Mocha Theme adapted for Waybar */
+/* GTK3 CSS Syntax */
+
+/* Base colors */
+@define-color bg_primary rgba(30, 30, 46, 0.9);
+@define-color bg_secondary #313244;
+@define-color bg_transparent rgba(30, 30, 46, 0.5);
+@define-color border_color rgba(88, 91, 112, 0.5);
+
+/* Text colors */
+@define-color fg_primary #cdd6f4;
+@define-color fg_secondary #bac2de;
+@define-color fg_dark #1e1e2e;
+
+/* Accent colors */
+@define-color accent_blue #89b4fa;
+@define-color accent_hover #74c7ec;
+
+/* State colors */
+@define-color urgent #f38ba8;
+@define-color critical #f38ba8;
+@define-color warning #f9e2af;
+@define-color success #a6e3a1;
+@define-color info #89dceb;
+
+/* Module specific colors */
+@define-color workspaces_focused #45475a;
+@define-color workspaces_urgent #f38ba8;
+@define-color workspaces_hover rgba(69, 71, 90, 0.3);
+
+/* Battery colors */
+@define-color battery_normal #cdd6f4;
+@define-color battery_bg #313244;
+@define-color battery_charging #a6e3a1;
+@define-color battery_critical #f38ba8;
+
+/* Power profile colors */
+@define-color power_performance #f38ba8;
+@define-color power_balanced #89b4fa;
+@define-color power_saver #a6e3a1;
+
+/* Module backgrounds */
+@define-color clock_bg #45475a;
+@define-color cpu_bg #a6e3a1;
+@define-color memory_bg #cba6f7;
+@define-color disk_bg #fab387;
+@define-color backlight_bg #94e2d5;
+@define-color network_bg #89b4fa;
+@define-color pulseaudio_bg #f9e2af;
+@define-color temperature_bg #fab387;
+@define-color tray_bg #89b4fa;
+@define-color language_bg #94e2d5;
+@define-color keyboard_bg #a6e3a1;
+@define-color mpd_bg #94e2d5;
+@define-color media_bg #94e2d5;
+@define-color idle_bg #585b70;
+@define-color idle_active #f5f5f5;
+
+/* Special states */
+@define-color disconnected #f38ba8;
+@define-color muted #6c7086;
+@define-color paused #74c7ec;
+@define-color stopped #6c7086;
+
+/* Privacy indicators */
+@define-color privacy_screenshare #fab387;
+@define-color privacy_audio_in #a6e3a1;
+@define-color privacy_audio_out #89b4fa;
+
+/* Transparency levels */
+@define-color transparent_light rgba(0, 0, 0, 0.1);
+@define-color transparent_medium rgba(0, 0, 0, 0.2);
+@define-color transparent_heavy rgba(0, 0, 0, 0.3); 

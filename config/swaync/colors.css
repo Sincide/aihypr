@@ -1,0 +1,41 @@
+/* SwayNotificationCenter Colors */
+/* Catppuccin Mocha Theme */
+
+:root {
+  /* Base colors */
+  --bg-primary: #1e1e2e;
+  --bg-secondary: #313244;
+  --bg-hover: #45475a;
+  --fg-primary: #cdd6f4;
+  --fg-secondary: #bac2de;
+  --border-color: #585b70;
+  
+  /* Accent colors */
+  --accent-color: #89b4fa;
+  --accent-hover: #74c7ec;
+  --fg-accent: #1e1e2e;
+  
+  /* Urgency colors */
+  --low-border: #a6adc8;
+  --normal-border: #89b4fa;
+  --critical-border: #f38ba8;
+  --critical-bg: #1e1e2e;
+  --critical-fg: #f38ba8;
+  
+  /* State colors */
+  --bg-critical: #f38ba8;
+  --bg-critical-hover: #eba0ac;
+  --fg-critical: #1e1e2e;
+  
+  --bg-warning: #f9e2af;
+  --bg-warning-hover: #f2d5a6;
+  --fg-warning: #1e1e2e;
+  
+  --bg-success: #a6e3a1;
+  --bg-success-hover: #94d3a2;
+  --fg-success: #1e1e2e;
+  
+  --bg-info: #89dceb;
+  --bg-info-hover: #74c7ec;
+  --fg-info: #1e1e2e;
+} 

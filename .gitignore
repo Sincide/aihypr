@@ -1,0 +1,60 @@
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+*.bak
+*.backup
+
+# Fish shell generated files
+config/fish/fish_variables
+config/fish/fishd.*
+
+# Cache directories
+.cache/
+__pycache__/
+*.pyc
+
+# Local environment files
+.env
+.env.local
+
+# Build outputs
+dist/
+build/
+
+# Personal files that shouldn't be shared
+config/*/personal/
+config/*/.personal
+*.personal
+
+# SSH keys and secrets
+*.key
+*.pem
+id_*
+!id_*.pub
+
+# Logs
+*.log
+logs/
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock 

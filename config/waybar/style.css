@@ -1,0 +1,329 @@
+@import "colors.css";
+
+* {
+    /* `otf-font-awesome` is required to be installed for icons */
+    font-family: FontAwesome, Roboto, Helvetica, Arial, sans-serif;
+    font-size: 13px;
+}
+
+window#waybar {
+    background-color: @bg_transparent;
+    border-bottom: 3px solid @border_color;
+    color: @fg_primary;
+    transition-property: background-color;
+    transition-duration: .5s;
+}
+
+window#waybar.hidden {
+    opacity: 0.2;
+}
+
+/*
+window#waybar.empty {
+    background-color: transparent;
+}
+window#waybar.solo {
+    background-color: #FFFFFF;
+}
+*/
+
+window#waybar.termite {
+    background-color: @bg_secondary;
+}
+
+window#waybar.chromium {
+    background-color: @fg_dark;
+    border: none;
+}
+
+button {
+    /* Use box-shadow instead of border so the text isn't offset */
+    box-shadow: inset 0 -3px transparent;
+    /* Avoid rounded borders under each button name */
+    border: none;
+    border-radius: 0;
+}
+
+/* https://github.com/Alexays/Waybar/wiki/FAQ#the-workspace-buttons-have-a-strange-hover-effect */
+button:hover {
+    background: inherit;
+    box-shadow: inset 0 -3px @fg_primary;
+}
+
+/* you can set a style on hover for any module like this */
+#pulseaudio:hover {
+    background-color: @warning;
+}
+
+#workspaces button {
+    padding: 0 5px;
+    background-color: transparent;
+    color: @fg_primary;
+}
+
+#workspaces button:hover {
+    background: @workspaces_hover;
+}
+
+#workspaces button.focused {
+    background-color: @workspaces_focused;
+    box-shadow: inset 0 -3px @fg_primary;
+}
+
+#workspaces button.urgent {
+    background-color: @workspaces_urgent;
+}
+
+#mode {
+    background-color: @workspaces_focused;
+    box-shadow: inset 0 -3px @fg_primary;
+}
+
+#clock,
+#battery,
+#cpu,
+#memory,
+#disk,
+#temperature,
+#backlight,
+#network,
+#pulseaudio,
+#wireplumber,
+#custom-media,
+#tray,
+#mode,
+#idle_inhibitor,
+#scratchpad,
+#power-profiles-daemon,
+#mpd {
+    padding: 0 10px;
+    color: @fg_primary;
+}
+
+#window,
+#workspaces {
+    margin: 0 4px;
+}
+
+/* If workspaces is the leftmost module, omit left margin */
+.modules-left > widget:first-child > #workspaces {
+    margin-left: 0;
+}
+
+/* If workspaces is the rightmost module, omit right margin */
+.modules-right > widget:last-child > #workspaces {
+    margin-right: 0;
+}
+
+#clock {
+    background-color: @clock_bg;
+}
+
+#battery {
+    background-color: @battery_bg;
+    color: @battery_normal;
+}
+
+#battery.charging, #battery.plugged {
+    color: @fg_dark;
+    background-color: @battery_charging;
+}
+
+@keyframes blink {
+    to {
+        background-color: @fg_primary;
+        color: @fg_dark;
+    }
+}
+
+/* Using steps() instead of linear as a timing function to limit cpu usage */
+#battery.critical:not(.charging) {
+    background-color: @battery_critical;
+    color: @fg_primary;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: steps(12);
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+#power-profiles-daemon {
+    padding-right: 15px;
+}
+
+#power-profiles-daemon.performance {
+    background-color: @power_performance;
+    color: @fg_primary;
+}
+
+#power-profiles-daemon.balanced {
+    background-color: @power_balanced;
+    color: @fg_primary;
+}
+
+#power-profiles-daemon.power-saver {
+    background-color: @power_saver;
+    color: @fg_dark;
+}
+
+label:focus {
+    background-color: @fg_dark;
+}
+
+#cpu {
+    background-color: @cpu_bg;
+    color: @fg_dark;
+}
+
+#memory {
+    background-color: @memory_bg;
+}
+
+#disk {
+    background-color: @disk_bg;
+}
+
+#backlight {
+    background-color: @backlight_bg;
+}
+
+#network {
+    background-color: @network_bg;
+}
+
+#network.disconnected {
+    background-color: @disconnected;
+}
+
+#pulseaudio {
+    background-color: @pulseaudio_bg;
+    color: @fg_dark;
+}
+
+#pulseaudio.muted {
+    background-color: @muted;
+    color: @fg_secondary;
+}
+
+#wireplumber {
+    background-color: @pulseaudio_bg;
+    color: @fg_dark;
+}
+
+#wireplumber.muted {
+    background-color: @muted;
+}
+
+#custom-media {
+    background-color: @media_bg;
+    color: @fg_dark;
+    min-width: 100px;
+}
+
+#custom-media.custom-spotify {
+    background-color: @media_bg;
+}
+
+#custom-media.custom-vlc {
+    background-color: @warning;
+}
+
+#temperature {
+    background-color: @temperature_bg;
+}
+
+#temperature.critical {
+    background-color: @critical;
+}
+
+#tray {
+    background-color: @tray_bg;
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+    background-color: @urgent;
+}
+
+#idle_inhibitor {
+    background-color: @idle_bg;
+}
+
+#idle_inhibitor.activated {
+    background-color: @idle_active;
+    color: @idle_bg;
+}
+
+#mpd {
+    background-color: @mpd_bg;
+    color: @fg_dark;
+}
+
+#mpd.disconnected {
+    background-color: @disconnected;
+}
+
+#mpd.stopped {
+    background-color: @stopped;
+}
+
+#mpd.paused {
+    background-color: @paused;
+}
+
+#language {
+    background: @language_bg;
+    color: @fg_dark;
+    padding: 0 5px;
+    margin: 0 5px;
+    min-width: 16px;
+}
+
+#keyboard-state {
+    background: @keyboard_bg;
+    color: @fg_dark;
+    padding: 0 0px;
+    margin: 0 5px;
+    min-width: 16px;
+}
+
+#keyboard-state > label {
+    padding: 0 5px;
+}
+
+#keyboard-state > label.locked {
+    background: @transparent_medium;
+}
+
+#scratchpad {
+    background: @transparent_medium;
+}
+
+#scratchpad.empty {
+	background-color: transparent;
+}
+
+#privacy {
+    padding: 0;
+}
+
+#privacy-item {
+    padding: 0 5px;
+    color: @fg_primary;
+}
+
+#privacy-item.screenshare {
+    background-color: @privacy_screenshare;
+}
+
+#privacy-item.audio-in {
+    background-color: @privacy_audio_in;
+}
+
+#privacy-item.audio-out {
+    background-color: @privacy_audio_out;
+}

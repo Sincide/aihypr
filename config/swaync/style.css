@@ -1,0 +1,260 @@
+/* SwayNotificationCenter Style */
+@import url("colors.css");
+
+* {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: normal;
+  font-size: 14px;
+}
+
+/* Notification window */
+.notification-row {
+  outline: none;
+  margin: 10px;
+  padding: 0;
+}
+
+.notification-row:focus,
+.notification-row:hover {
+  background: var(--bg-hover);
+}
+
+.notification {
+  background: var(--bg-primary);
+  color: var(--fg-primary);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  padding: 0;
+  margin: 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.notification-content {
+  background: transparent;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.notification-default-action {
+  background: var(--bg-primary);
+  color: var(--fg-primary);
+  border-radius: 8px;
+}
+
+.notification-default-action:hover {
+  background: var(--bg-hover);
+}
+
+.close-button {
+  background: var(--bg-critical);
+  color: var(--fg-critical);
+  text-shadow: none;
+  padding: 4px;
+  border-radius: 50%;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+.close-button:hover {
+  background: var(--bg-critical-hover);
+}
+
+.notification-action {
+  background: var(--bg-secondary);
+  color: var(--fg-secondary);
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  margin: 4px;
+}
+
+.notification-action:hover {
+  background: var(--bg-hover);
+}
+
+.notification-action:active {
+  background: var(--accent-color);
+}
+
+.summary {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--fg-primary);
+  text-shadow: none;
+}
+
+.time {
+  font-size: 12px;
+  font-weight: normal;
+  color: var(--fg-secondary);
+}
+
+.body {
+  font-size: 14px;
+  font-weight: normal;
+  color: var(--fg-primary);
+  text-shadow: none;
+}
+
+.control-center {
+  background: var(--bg-primary);
+  color: var(--fg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  margin: 10px;
+}
+
+.control-center-list {
+  background: transparent;
+}
+
+.control-center-list-placeholder {
+  opacity: 0.5;
+  font-size: 16px;
+  color: var(--fg-secondary);
+}
+
+.floating-notifications {
+  background: transparent;
+}
+
+/* Notification groups */
+.notification-group {
+  background: var(--bg-primary);
+  color: var(--fg-primary);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  margin: 10px;
+}
+
+.notification-group-headers {
+  background: var(--bg-secondary);
+  color: var(--fg-secondary);
+  border-radius: 8px 8px 0 0;
+  padding: 10px;
+  font-weight: bold;
+}
+
+.notification-group-icon {
+  color: var(--accent-color);
+}
+
+.notification-group-close-all-button {
+  background: var(--bg-critical);
+  color: var(--fg-critical);
+  border-radius: 4px;
+  border: none;
+  padding: 4px 8px;
+}
+
+.notification-group-close-all-button:hover {
+  background: var(--bg-critical-hover);
+}
+
+/* Control center widgets */
+.widget-title {
+  background: var(--bg-secondary);
+  color: var(--fg-primary);
+  border-radius: 8px;
+  padding: 15px;
+  margin: 10px;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.widget-title > button {
+  background: var(--accent-color);
+  color: var(--fg-accent);
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-weight: bold;
+}
+
+.widget-title > button:hover {
+  background: var(--accent-hover);
+}
+
+.widget-dnd {
+  background: var(--bg-secondary);
+  color: var(--fg-primary);
+  border-radius: 8px;
+  padding: 15px;
+  margin: 10px;
+  font-weight: bold;
+}
+
+.widget-dnd > switch {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+}
+
+.widget-dnd > switch:checked {
+  background: var(--accent-color);
+}
+
+.widget-dnd > switch slider {
+  background: var(--fg-primary);
+  border-radius: 50%;
+}
+
+.widget-inhibitors {
+  background: var(--bg-secondary);
+  color: var(--fg-primary);
+  border-radius: 8px;
+  padding: 15px;
+  margin: 10px;
+}
+
+.widget-inhibitors > button {
+  background: var(--bg-warning);
+  color: var(--fg-warning);
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-weight: bold;
+}
+
+.widget-inhibitors > button:hover {
+  background: var(--bg-warning-hover);
+}
+
+/* Scrollbar */
+scrollbar {
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  border: none;
+}
+
+scrollbar slider {
+  background: var(--accent-color);
+  border-radius: 8px;
+  border: none;
+}
+
+scrollbar slider:hover {
+  background: var(--accent-hover);
+}
+
+/* Urgency levels */
+.notification.low {
+  border-color: var(--low-border);
+}
+
+.notification.normal {
+  border-color: var(--normal-border);
+}
+
+.notification.critical {
+  border-color: var(--critical-border);
+  background: var(--critical-bg);
+}
+
+.notification.critical .summary {
+  color: var(--critical-fg);
+}
+
+.notification.critical .body {
+  color: var(--critical-fg);
+} 
