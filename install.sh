@@ -97,6 +97,7 @@ AUR_PACKAGES=(
     "python-colorspacious"
     "ttf-material-design-icons"      # Additional icon fonts
     "cliphist"                       # Clipboard history manager
+    "cursor-bin"                     # Cursor AI code editor
 )
 
 # Install packages
