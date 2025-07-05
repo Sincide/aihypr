@@ -4,6 +4,9 @@ set -e
 
 echo "🚀 Post-installation script for Arch Linux + Hyprland"
 
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # Update mirrors with reflector for Sweden
 echo "📡 Setting up mirrors for Sweden..."
 sudo pacman -S reflector --noconfirm
@@ -84,24 +87,24 @@ yay -S --noconfirm "${AUR_PACKAGES[@]}"
 echo "🔗 Setting up configuration symlinks..."
 mkdir -p ~/.config
 
-for dir in config/*/; do
+for dir in "$SCRIPT_DIR"/config/*/; do
     if [ -d "$dir" ]; then
         dirname=$(basename "$dir")
         echo "Linking $dirname..."
         rm -rf ~/.config/"$dirname"
-        ln -sf "$(pwd)/$dir" ~/.config/"$dirname"
+        ln -sf "$dir" ~/.config/"$dirname"
     fi
 done
 
 # Setup wallpapers directory
 echo "🖼️  Setting up wallpapers directory..."
-mkdir -p wallpapers/{nature,cyberpunk,abstract,minimal,space,cityscape}
-chmod 755 wallpapers/{nature,cyberpunk,abstract,minimal,space,cityscape}
+mkdir -p "$SCRIPT_DIR"/wallpapers/{nature,cyberpunk,abstract,minimal,space,cityscape}
+chmod 755 "$SCRIPT_DIR"/wallpapers/{nature,cyberpunk,abstract,minimal,space,cityscape}
 echo "   ✅ Wallpapers categories created"
 
 # Setup AI Themer
 echo "🎨 Setting up AI Themer..."
-cd ai-themer
+cd "$SCRIPT_DIR/ai-themer"
 echo "   Testing AI Themer installation..."
 if python demo_simulation.py > /dev/null 2>&1; then
     echo "   ✅ AI Themer demo works perfectly"
@@ -122,10 +125,10 @@ fi
 # Create Rofi launcher script
 echo "   Creating Rofi launcher script..."
 mkdir -p ~/.local/bin
-cat > ~/.local/bin/ai-themer-pick << 'EOF'
+cat > ~/.local/bin/ai-themer-pick << EOF
 #!/bin/bash
 # AI Themer Rofi Wallpaper Picker
-cd "$(dirname "$(readlink -f "$0")")/../../../aihypr/ai-themer" 2>/dev/null || cd "$HOME/aihypr/ai-themer"
+cd "$SCRIPT_DIR/ai-themer"
 python -m src.ai_themer.cli pick --wallpaper-dir ../wallpapers/
 EOF
 chmod +x ~/.local/bin/ai-themer-pick
@@ -146,7 +149,7 @@ else
     echo "   ⚠️  Hyprland keybindings.conf not found - add manually: bind = SUPER, W, exec, ai-themer-pick"
 fi
 
-cd ..
+cd "$SCRIPT_DIR"
 
 # Set fish as default shell
 echo "🐟 Setting fish as default shell..."
