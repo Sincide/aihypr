@@ -9,7 +9,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Update mirrors with reflector for Sweden
 echo "📡 Setting up mirrors for Sweden..."
-sudo pacman -S --needed reflector --noconfirm
+sudo pacman -S --needed rsync reflector --noconfirm
 sudo reflector --country Sweden --latest 5 --sort rate --save /etc/pacman.d/mirrorlist
 sudo pacman -Syyu --noconfirm
 
