@@ -13,10 +13,37 @@ from pathlib import Path
 from dataclasses import dataclass, field
 from datetime import datetime
 import logging
+import numpy as np
 
 from .color_types import ColorPalette
 from .template_engine import TemplateEngine
 from ..utils.file_utils import ensure_dir, backup_file, restore_file
+
+
+def convert_numpy_types(obj):
+    """
+    Convert numpy types to native Python types for JSON serialization.
+    
+    Args:
+        obj: Object that might contain numpy types
+        
+    Returns:
+        Object with numpy types converted to native Python types
+    """
+    if isinstance(obj, np.integer):
+        return int(obj)
+    elif isinstance(obj, np.floating):
+        return float(obj)
+    elif isinstance(obj, np.ndarray):
+        return obj.tolist()
+    elif isinstance(obj, dict):
+        return {k: convert_numpy_types(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [convert_numpy_types(item) for item in obj]
+    elif isinstance(obj, tuple):
+        return tuple(convert_numpy_types(item) for item in obj)
+    else:
+        return obj
 
 
 @dataclass
@@ -110,6 +137,24 @@ class ThemeApplier:
             output_path=os.path.join(home, ".config/rofi/colors.rasi"),
             reload_command=None,  # Rofi reads config on each launch
             reload_delay=0.0
+        )
+        
+        # Waybar
+        self.applications["waybar"] = ApplicationConfig(
+            name="waybar",
+            template_path="waybar/colors.css.j2",
+            output_path=os.path.join(home, ".config/waybar/colors.css"),
+            reload_command="pkill -SIGUSR2 waybar",  # Reload waybar
+            reload_delay=1.0
+        )
+        
+        # SwayNC
+        self.applications["swaync"] = ApplicationConfig(
+            name="swaync",
+            template_path="swaync/colors.css.j2", 
+            output_path=os.path.join(home, ".config/swaync/colors.css"),
+            reload_command="swaync-client -rs",  # Reload swaync
+            reload_delay=1.0
         )
     
     def apply_theme(self, 
@@ -270,7 +315,7 @@ class ThemeApplier:
         """Save a record of the theme application."""
         record = {
             "timestamp": datetime.now().isoformat(),
-            "palette": palette.to_dict(),
+            "palette": convert_numpy_types(palette.to_dict()),
             "applications": {
                 name: {
                     "success": result.success,
@@ -283,9 +328,16 @@ class ThemeApplier:
             }
         }
         
+        # Ensure the entire record is JSON-serializable
+        record = convert_numpy_types(record)
+        
         record_path = os.path.join(self.config_dir, "last_application.json")
-        with open(record_path, 'w') as f:
-            json.dump(record, f, indent=2)
+        try:
+            with open(record_path, 'w') as f:
+                json.dump(record, f, indent=2)
+        except Exception as e:
+            self.logger.error(f"Failed to save application record: {e}")
+            # Continue execution even if record saving fails
     
     def restore_backups(self, applications: Optional[List[str]] = None) -> Dict[str, bool]:
         """

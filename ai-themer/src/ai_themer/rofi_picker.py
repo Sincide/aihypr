@@ -188,6 +188,42 @@ class RofiWallpaperPicker:
         except Exception as e:
             raise Exception(f"Failed to launch Rofi: {e}")
     
+    def set_wallpaper(self, wallpaper_path: str) -> bool:
+        """
+        Set the wallpaper using Hyprland.
+        
+        Args:
+            wallpaper_path: Path to the wallpaper image
+            
+        Returns:
+            True if successful, False otherwise
+        """
+        try:
+            # Set wallpaper using hyprctl
+            result = subprocess.run([
+                'hyprctl', 
+                'hyprpaper', 
+                'wallpaper', 
+                f',{wallpaper_path}'
+            ], capture_output=True, text=True, timeout=10)
+            
+            if result.returncode == 0:
+                print(f"✓ Wallpaper set: {wallpaper_path}")
+                return True
+            else:
+                print(f"✗ Failed to set wallpaper: {result.stderr}")
+                return False
+                
+        except subprocess.TimeoutExpired:
+            print("✗ Wallpaper setting timed out")
+            return False
+        except FileNotFoundError:
+            print("✗ hyprctl not found - wallpaper setting skipped")
+            return False
+        except Exception as e:
+            print(f"✗ Error setting wallpaper: {e}")
+            return False
+
     def apply_theme_from_wallpaper(self, wallpaper_path: str, method: str = "adaptive") -> bool:
         """
         Apply theme from selected wallpaper.
@@ -216,6 +252,12 @@ class RofiWallpaperPicker:
             # Check if all applications succeeded
             success_count = sum(1 for result in results.values() if result.success)
             total_count = len(results)
+            
+            if success_count < total_count:
+                print(f"⚠️  {success_count}/{total_count} applications themed successfully")
+                for app_name, result in results.items():
+                    if not result.success:
+                        print(f"   - {app_name}: {result.error}")
             
             return success_count == total_count
             
@@ -261,32 +303,43 @@ class RofiWallpaperPicker:
         print(f"Selected: {wallpaper_path}")
         print("Applying theme...")
         
+        # Set wallpaper first
+        wallpaper_success = self.set_wallpaper(wallpaper_path)
+        
         # Apply theme
-        success = self.apply_theme_from_wallpaper(wallpaper_path, method)
+        theme_success = self.apply_theme_from_wallpaper(wallpaper_path, method)
+        
+        success = wallpaper_success and theme_success
         
         if success:
-            print("✓ Theme applied successfully!")
+            print("✓ Wallpaper and theme applied successfully!")
             
             # Send notification
             try:
                 subprocess.run([
                     'notify-send', 
                     'AI Themer', 
-                    f'Theme applied from {os.path.basename(wallpaper_path)}',
+                    f'Wallpaper and theme applied from {os.path.basename(wallpaper_path)}',
                     '--icon=preferences-desktop-wallpaper'
                 ], check=False)
             except:
                 pass  # Notification not critical
             
         else:
-            print("✗ Failed to apply theme")
+            error_msg = []
+            if not wallpaper_success:
+                error_msg.append("wallpaper setting")
+            if not theme_success:
+                error_msg.append("theme application")
+            
+            print(f"✗ Failed: {' and '.join(error_msg)}")
             
             # Send error notification
             try:
                 subprocess.run([
                     'notify-send', 
                     'AI Themer', 
-                    'Failed to apply theme',
+                    f'Failed: {" and ".join(error_msg)}',
                     '--icon=dialog-error'
                 ], check=False)
             except:
