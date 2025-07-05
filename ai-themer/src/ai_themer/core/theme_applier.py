@@ -126,7 +126,7 @@ class ThemeApplier:
             name="alacritty",
             template_path="alacritty/colors.toml.j2",
             output_path=os.path.join(home, ".config/alacritty/colors.toml"),
-            reload_command=None,  # Alacritty auto-reloads
+            reload_command="pkill -USR1 alacritty",  # Force reload all Alacritty windows
             reload_delay=0.5
         )
         

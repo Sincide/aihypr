@@ -18,12 +18,14 @@ A comprehensive, modular dotfiles configuration for Arch Linux featuring Hyprlan
 
 - **🎨 Unified Theming**: Catppuccin Mocha color scheme across all applications
 - **🖼️ Smart Wallpaper System**: AI-powered color extraction and automatic theming
+- **⚡ Real-Time Updates**: All applications reload instantly when themes change
 - **🔥 Modern Window Manager**: Hyprland with smooth animations and effects
 - **⚡ Lightning Fast**: Optimized for performance with minimal resource usage
 - **🐟 Fish Shell**: Modern shell with intelligent autocompletions and syntax highlighting
 - **🌈 Consistent Colors**: Modular color system that changes everything at once
 - **📱 Touch-Friendly**: Rofi menus with thumbnails and categories
 - **🔧 Highly Modular**: Easy to customize and extend individual components
+- **🛠️ Robust & Reliable**: Comprehensive error handling and automatic recovery
 
 ## 📦 What's Included
 
@@ -67,6 +69,14 @@ A comprehensive, modular dotfiles configuration for Arch Linux featuring Hyprlan
    chmod +x install.sh
    ./install.sh
    ```
+   
+   The installer will:
+   - Install all required packages (including AUR packages)
+   - Set up all configuration files
+   - Install necessary fonts (JetBrains Mono Nerd Font, Font Awesome, etc.)
+   - Install Python dependencies (colorspacious, numpy, etc.)
+   - Create backup of existing configurations
+   - Set up directory structure and permissions
 
 3. **Reboot to apply all changes**:
    ```bash
@@ -114,10 +124,22 @@ The default theme uses Catppuccin Mocha with these key colors:
 
 ### AI Themer Integration
 The AI Themer automatically:
-1. Extracts dominant colors from wallpapers
-2. Generates harmonious color palettes
-3. Updates all application themes
-4. Applies changes without restart
+1. Extracts dominant colors from wallpapers using advanced algorithms
+2. Generates harmonious color palettes with proper contrast ratios
+3. Updates all application themes simultaneously
+4. Applies changes in real-time without restart
+5. Handles wallpaper setting via swww with smooth transitions
+6. Supports multiple color extraction methods (adaptive, k-means, median cut)
+
+**Recent Improvements**:
+- ✅ Fixed Hyprland color variables using proper rgba() format with gradients
+- ✅ Corrected Rofi template variables (bg0, fg0, etc.) for perfect compatibility
+- ✅ Enhanced Alacritty real-time reloading via USR1 signal
+- ✅ Improved error handling and JSON serialization
+- ✅ Added comprehensive type conversion for numpy types
+- ✅ Fixed swww wallpaper setting with daemon management
+- ✅ Enhanced waybar reload with SIGUSR2 signal fallback
+- ✅ Resolved all template syntax errors and parsing issues
 
 ## 🔧 Component Guide
 
@@ -181,6 +203,10 @@ Super+Q
 - Font ligatures support
 - Extensive keybindings
 - Vi mode support
+- **Real-time config reloading** - Colors update instantly when themes change
+
+**Live Reloading**:
+The AI Themer uses `pkill -USR1 alacritty` to force immediate reload of all Alacritty windows, ensuring colors update in real-time without needing to restart terminals.
 
 **Customization**:
 ```toml
@@ -192,6 +218,12 @@ normal = { family = "JetBrains Mono", style = "Regular" }
 # Transparency
 [window]
 opacity = 0.95  # Adjust transparency
+
+# Enable live config reloading keybinding (optional)
+[keyboard]
+bindings = [
+    { key = "F5", mods = "Control", action = "ReloadConfig" }
+]
 ```
 
 ### Fish Shell
@@ -379,6 +411,28 @@ q - Quit
 3. **Recommended resolution**: 1920x1080 or higher
 4. **Use AI Themer** to automatically generate themes
 
+### AI Themer Technical Details
+
+**Color Extraction Methods**:
+- **Adaptive**: Automatically selects the best method based on image characteristics
+- **K-means LAB**: Uses LAB color space for perceptually uniform clustering
+- **K-means RGB**: Traditional RGB-based color clustering
+- **Median Cut**: Efficient color quantization algorithm
+- **ColorThief**: Popular color extraction library
+
+**Template System**:
+- **Jinja2-based**: Powerful templating with variables and logic
+- **Application-specific**: Custom templates for each application
+- **Color harmony**: Automatically generates complementary colors
+- **Type-safe**: Proper handling of numpy types and JSON serialization
+
+**Real-time Application**:
+- **Hyprland**: Uses proper rgba() format with gradients
+- **Alacritty**: USR1 signal for instant reload
+- **Waybar**: SIGUSR2 signal with fallback restart
+- **Rofi**: Compatible variable names (bg0, fg0, etc.)
+- **SwayNC**: CSS custom properties for styling
+
 ### Customizing Keybindings
 
 Edit `~/.config/hypr/conf/keybindings.conf`:
@@ -489,6 +543,52 @@ python -m src.ai_themer.cli --help
 
 # Test with demo
 python demo_simulation.py
+
+# Check for missing dependencies
+yay -S python-colorspacious --needed
+
+# Test rofi picker directly
+python -m src.ai_themer.rofi_picker ~/wallpapers/
+
+# Check for Hyprland configuration errors
+hyprctl reload
+```
+
+#### Hyprland Color Parsing Errors
+If you see "Error parsing gradient : failed to parse as a color":
+```bash
+# This indicates the Hyprland color template was using invalid syntax
+# The issue has been fixed in recent updates
+# Update your AI Themer templates:
+git pull origin main
+
+# Or manually check colors.conf format
+cat ~/.config/hypr/conf/colors.conf
+# Should show proper rgba() format like: rgba(33ccffee)
+```
+
+#### Rofi Theme Validation Failed
+If you see "the variable 'bg0' in element failed to resolve":
+```bash
+# This indicates the Rofi template variables don't match the theme
+# The issue has been fixed in recent updates
+# Force regenerate colors:
+Super+W  # Use wallpaper picker to regenerate theme
+
+# Or check colors.rasi manually
+cat ~/.config/rofi/colors.rasi
+# Should define bg0, fg0, bg1, fg1, etc.
+```
+
+#### Alacritty Colors Not Updating
+If terminal colors don't change with new themes:
+```bash
+# The AI Themer now forces reload via USR1 signal
+# But you can manually trigger it:
+pkill -USR1 alacritty
+
+# Or use the keybinding (if configured):
+Ctrl+F5  # In Alacritty window
 ```
 
 ### Performance Issues
