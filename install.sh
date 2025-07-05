@@ -58,6 +58,11 @@ PACKAGES=(
     "playerctl"                      # Media player control
     "brightnessctl"                  # Screen brightness control
     
+    # SSH and security
+    "openssh"                        # SSH client and server
+    "keychain"                       # SSH key manager
+    "gnupg"                          # GPG for signing commits
+    
     # Optional apps
     "brave-bin"
     "thunar"
@@ -186,6 +191,60 @@ fi
 
 cd "$SCRIPT_DIR"
 
+# Setup SSH
+echo "🔐 Setting up SSH..."
+# Enable SSH service
+sudo systemctl enable sshd.service
+echo "   ✅ SSH service enabled"
+
+# Create SSH directory with proper permissions if it doesn't exist
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh
+echo "   ✅ SSH directory created with proper permissions"
+
+# Create SSH manager launcher
+echo "   Creating SSH manager launcher..."
+mkdir -p ~/.local/bin
+cat > ~/.local/bin/ssh-manager << EOF
+#!/bin/bash
+# SSH Key Manager Launcher
+cd "$SCRIPT_DIR"
+./scripts/ssh-manager.sh
+EOF
+chmod +x ~/.local/bin/ssh-manager
+echo "   ✅ SSH manager available as 'ssh-manager' command"
+
+# Note: SSH backup directory (/mnt/Stuff/backups) will be available after running post-install scripts
+echo "   ✅ SSH backup directory will be available at /mnt/Stuff/backups after mounting drives"
+
+# Add SSH agent setup to fish config
+echo "   Setting up SSH agent for fish shell..."
+if [ -f ~/.config/fish/config.fish ]; then
+    if ! grep -q "keychain" ~/.config/fish/config.fish; then
+        echo "" >> ~/.config/fish/config.fish
+        echo "# SSH agent setup with keychain" >> ~/.config/fish/config.fish
+        echo "if status is-interactive" >> ~/.config/fish/config.fish
+        echo "    # Start keychain for SSH key management" >> ~/.config/fish/config.fish
+        echo "    if type -q keychain" >> ~/.config/fish/config.fish
+        echo "        if test -f ~/.ssh/id_rsa -o -f ~/.ssh/id_ed25519" >> ~/.config/fish/config.fish
+        echo "            keychain --quiet --agents ssh" >> ~/.config/fish/config.fish
+        echo "            source ~/.keychain/(hostname)-sh" >> ~/.config/fish/config.fish
+        echo "        end" >> ~/.config/fish/config.fish
+        echo "    end" >> ~/.config/fish/config.fish
+        echo "end" >> ~/.config/fish/config.fish
+        echo "" >> ~/.config/fish/config.fish
+        echo "# SSH Manager aliases" >> ~/.config/fish/config.fish
+        echo "alias sshm 'ssh-manager'" >> ~/.config/fish/config.fish
+        echo "abbr -a sshm 'ssh-manager'" >> ~/.config/fish/config.fish
+        echo "   ✅ SSH agent auto-start configured for fish"
+        echo "   ✅ SSH manager aliases added (sshm)"
+    else
+        echo "   ✅ SSH agent configuration already exists"
+    fi
+else
+    echo "   ⚠️  Fish config not found - SSH agent setup skipped"
+fi
+
 # Set fish as default shell
 echo "🐟 Setting fish as default shell..."
 if ! grep -q "$(which fish)" /etc/shells; then
@@ -226,4 +285,24 @@ echo "   • Font Awesome (icons)"
 echo "   • Roboto (UI elements)"
 echo "   • Noto Fonts (wide character support + emoji)"
 echo "   • Liberation & DejaVu (fallback fonts)"
-echo "   • Material Design Icons (additional icons)" 
+echo "   • Material Design Icons (additional icons)"
+echo ""
+echo "🔐 SSH Setup:"
+echo "   • SSH service enabled and ready"
+echo "   • SSH directory created with proper permissions"
+echo "   • SSH agent auto-start configured with keychain"
+echo "   • SSH Key Manager: run 'ssh-manager' or 'sshm' command"
+echo "   • Interactive backup/restore system ready"
+echo ""
+echo "🛡️  Security Notes:"
+echo "   • Generate SSH keys: ssh-keygen -t ed25519 -C 'your_email@example.com'"
+echo "   • Add to GitHub/GitLab: copy ~/.ssh/id_ed25519.pub"
+echo "   • Test connections: sshm → option 6"
+echo "   • Backup keys before system changes: sshm → option 1"
+echo ""
+echo "💡 Quick SSH Setup Guide:"
+echo "   1. Generate new SSH key: ssh-keygen -t ed25519"
+echo "   2. Add to GitHub: cat ~/.ssh/id_ed25519.pub (copy to GitHub settings)"
+echo "   3. Test connection: ssh -T git@github.com"
+echo "   4. Create first backup: sshm → option 1"
+echo "   5. Set up automatic key loading: keychain ~/.ssh/id_ed25519" 
