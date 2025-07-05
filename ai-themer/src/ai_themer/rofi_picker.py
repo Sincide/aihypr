@@ -7,12 +7,30 @@ import os
 import subprocess
 import tempfile
 import shutil
+import warnings
+import sys
 from typing import List, Optional, Tuple
 from pathlib import Path
 
-from .core.color_extractor import ColorExtractor, ColorExtractionMethod
-from .core.template_engine import TemplateEngine
-from .core.theme_applier import ThemeApplier
+# Suppress warnings from colorspacious library
+warnings.filterwarnings("ignore", message="invalid escape sequence")
+warnings.filterwarnings("ignore", category=SyntaxWarning)
+
+# Add the parent directory to Python path to handle imports when run directly
+if __name__ == "__main__":
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    parent_dir = os.path.dirname(os.path.dirname(script_dir))
+    sys.path.insert(0, parent_dir)
+
+try:
+    from .core.color_extractor import ColorExtractor, ColorExtractionMethod
+    from .core.template_engine import TemplateEngine
+    from .core.theme_applier import ThemeApplier
+except ImportError:
+    # Handle case when running as script directly
+    from src.ai_themer.core.color_extractor import ColorExtractor, ColorExtractionMethod
+    from src.ai_themer.core.template_engine import TemplateEngine
+    from src.ai_themer.core.theme_applier import ThemeApplier
 
 
 class RofiWallpaperPicker:
@@ -308,28 +326,43 @@ python -m src.ai_themer.rofi_picker "{wallpaper_dir}"
     return script_path
 
 
-if __name__ == "__main__":
-    import sys
-    import warnings
+def main():
+    """Main entry point for the rofi picker."""
+    import argparse
     
-    # Suppress warnings from colorspacious library
-    warnings.filterwarnings("ignore", message="invalid escape sequence")
-    warnings.filterwarnings("ignore", category=SyntaxWarning)
+    parser = argparse.ArgumentParser(description='AI Themer Rofi Wallpaper Picker')
+    parser.add_argument('wallpaper_dir', help='Directory containing wallpapers')
+    parser.add_argument('--template-dir', help='Template directory', 
+                       default=os.path.join(os.path.dirname(__file__), '..', '..', 'templates'))
+    parser.add_argument('--config-dir', help='Configuration directory',
+                       default=os.path.expanduser('~/.config/ai-themer'))
+    parser.add_argument('--method', help='Color extraction method',
+                       default='adaptive', choices=['adaptive', 'dominant', 'kmeans'])
     
-    if len(sys.argv) < 2:
-        print("Usage: python -m ai_themer.rofi_picker <wallpaper_dir>")
+    args = parser.parse_args()
+    
+    # Ensure directories exist
+    os.makedirs(args.config_dir, exist_ok=True)
+    
+    # Create and run picker
+    picker = RofiWallpaperPicker(
+        wallpaper_dir=os.path.expanduser(args.wallpaper_dir),
+        template_dir=os.path.expanduser(args.template_dir),
+        config_dir=args.config_dir
+    )
+    
+    try:
+        success = picker.run(method=args.method)
+        if success:
+            print("✅ Theme applied successfully!")
+            sys.exit(0)
+        else:
+            print("❌ Theme application failed or cancelled")
+            sys.exit(1)
+    except Exception as e:
+        print(f"❌ Error: {e}")
         sys.exit(1)
-    
-    wallpaper_dir = sys.argv[1]
-    
-    # Default directories
-    ai_themer_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-    template_dir = os.path.join(ai_themer_dir, "templates")
-    config_dir = os.path.expanduser("~/.config/ai-themer")
-    
-    # Ensure config directory exists before any logging
-    os.makedirs(config_dir, exist_ok=True)
-    
-    # Run picker
-    picker = RofiWallpaperPicker(wallpaper_dir, template_dir, config_dir)
-    picker.run() 
+
+
+if __name__ == "__main__":
+    main() 

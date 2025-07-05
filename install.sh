@@ -151,7 +151,7 @@ export PYTHONWARNINGS="ignore::SyntaxWarning"
 mkdir -p ~/.config/ai-themer
 mkdir -p ~/.cache/rofi
 cd "$SCRIPT_DIR/ai-themer"
-python -m src.ai_themer.rofi_picker "../wallpapers/"
+python src/ai_themer/rofi_picker.py "$SCRIPT_DIR/wallpapers" --template-dir "$SCRIPT_DIR/ai-themer/templates"
 EOF
 chmod +x ~/.local/bin/ai-themer-pick
 echo "   ✅ Rofi launcher created at ~/.local/bin/ai-themer-pick"
