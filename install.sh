@@ -43,8 +43,9 @@ PACKAGES=(
     "unzip"
     
     # Optional apps
-    "firefox"
+    "brave-bin"
     "thunar"
+    "qbittorrent-nox"
     "grim"
     "slurp"
     "wl-clipboard"
