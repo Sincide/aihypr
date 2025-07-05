@@ -301,6 +301,8 @@ class RofiWallpaperPicker:
         Returns:
             True if a theme was applied, False otherwise
         """
+        import time
+        
         # Find wallpapers
         wallpapers = self.find_wallpapers()
         
@@ -329,24 +331,50 @@ class RofiWallpaperPicker:
         print(f"Selected: {wallpaper_path}")
         print("Applying theme...")
         
+        # Send initial notification
+        try:
+            subprocess.run([
+                'notify-send', 
+                'AI Themer', 
+                f'Applying theme from {os.path.basename(wallpaper_path)}...',
+                '--icon=preferences-desktop-wallpaper',
+                '--expire-time=3000'
+            ], check=False)
+        except:
+            pass
+        
+        # Start timing
+        start_time = time.time()
+        
         # Set wallpaper first
+        wallpaper_start = time.time()
         wallpaper_success = self.set_wallpaper(wallpaper_path)
+        wallpaper_time = time.time() - wallpaper_start
         
         # Apply theme
+        theme_start = time.time()
         theme_success = self.apply_theme_from_wallpaper(wallpaper_path, method)
+        theme_time = time.time() - theme_start
+        
+        # Total time
+        total_time = time.time() - start_time
         
         success = wallpaper_success and theme_success
         
         if success:
-            print("✓ Wallpaper and theme applied successfully!")
+            print(f"✓ Wallpaper and theme applied successfully in {total_time:.1f}s!")
             
-            # Send notification
+            # Send success notification with timing
             try:
                 subprocess.run([
                     'notify-send', 
                     'AI Themer', 
-                    f'Wallpaper and theme applied from {os.path.basename(wallpaper_path)}',
-                    '--icon=preferences-desktop-wallpaper'
+                    f'✓ Theme applied from {os.path.basename(wallpaper_path)}\n'
+                    f'⏱️ Wallpaper: {wallpaper_time:.1f}s\n'
+                    f'🎨 Theme: {theme_time:.1f}s\n'
+                    f'📊 Total: {total_time:.1f}s',
+                    '--icon=preferences-desktop-wallpaper',
+                    '--expire-time=5000'
                 ], check=False)
             except:
                 pass  # Notification not critical
@@ -358,15 +386,17 @@ class RofiWallpaperPicker:
             if not theme_success:
                 error_msg.append("theme application")
             
-            print(f"✗ Failed: {' and '.join(error_msg)}")
+            print(f"✗ Failed: {' and '.join(error_msg)} after {total_time:.1f}s")
             
-            # Send error notification
+            # Send error notification with timing
             try:
                 subprocess.run([
                     'notify-send', 
                     'AI Themer', 
-                    f'Failed: {" and ".join(error_msg)}',
-                    '--icon=dialog-error'
+                    f'✗ Failed: {" and ".join(error_msg)}\n'
+                    f'⏱️ Time elapsed: {total_time:.1f}s',
+                    '--icon=dialog-error',
+                    '--expire-time=5000'
                 ], check=False)
             except:
                 pass
