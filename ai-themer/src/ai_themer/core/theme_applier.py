@@ -144,8 +144,8 @@ class ThemeApplier:
             name="waybar",
             template_path="waybar/colors.css.j2",
             output_path=os.path.join(home, ".config/waybar/colors.css"),
-            reload_command="pkill -SIGUSR2 waybar",  # Reload waybar
-            reload_delay=1.0
+            reload_command="pkill -SIGUSR2 waybar || (pkill waybar && sleep 1 && waybar &)",  # Reload or restart waybar
+            reload_delay=2.0
         )
         
         # SwayNC

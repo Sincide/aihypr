@@ -67,6 +67,7 @@ PACKAGES=(
     "wl-clipboard"
     "polkit-gnome"
     "network-manager-applet"
+    "swww"                           # Wallpaper daemon for Wayland
     
     # Image tools for AI Themer
     "imagemagick"
@@ -200,6 +201,11 @@ echo "   • Run 'cd ai-themer && python demo_simulation.py' to see a demo"
 echo "   • Add your wallpapers to the appropriate category folders"
 echo "   • Launch Rofi picker: 'ai-themer-pick' (or use keyboard shortcut)"
 echo "   • All Python dependencies are installed - no pip needed!"
+echo ""
+echo "🖼️  Wallpaper System:"
+echo "   • Uses swww for smooth wallpaper transitions"
+echo "   • swww-daemon will start automatically on login"
+echo "   • Run 'swww-daemon' manually if wallpaper setting fails"
 echo ""
 echo "🖼️  Rofi Wallpaper Picker:"
 echo "   • Command: ai-themer-pick"

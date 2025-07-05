@@ -9,6 +9,7 @@ import tempfile
 import shutil
 import warnings
 import sys
+import time
 from typing import List, Optional, Tuple
 from pathlib import Path
 
@@ -190,7 +191,7 @@ class RofiWallpaperPicker:
     
     def set_wallpaper(self, wallpaper_path: str) -> bool:
         """
-        Set the wallpaper using Hyprland.
+        Set the wallpaper using swww.
         
         Args:
             wallpaper_path: Path to the wallpaper image
@@ -199,26 +200,51 @@ class RofiWallpaperPicker:
             True if successful, False otherwise
         """
         try:
-            # Set wallpaper using hyprctl
+            # Check if swww daemon is running
+            daemon_check = subprocess.run(['pgrep', 'swww-daemon'], capture_output=True)
+            if daemon_check.returncode != 0:
+                print("Starting swww daemon...")
+                subprocess.run(['swww-daemon'], capture_output=True, timeout=5)
+                # Wait for daemon to start
+                time.sleep(2)
+            
+            # Set wallpaper using swww
             result = subprocess.run([
-                'hyprctl', 
-                'hyprpaper', 
-                'wallpaper', 
-                f',{wallpaper_path}'
-            ], capture_output=True, text=True, timeout=10)
+                'swww', 
+                'img', 
+                wallpaper_path,
+                '--transition-type=wipe',
+                '--transition-duration=2'
+            ], capture_output=True, text=True, timeout=15)
             
             if result.returncode == 0:
                 print(f"✓ Wallpaper set: {wallpaper_path}")
                 return True
             else:
                 print(f"✗ Failed to set wallpaper: {result.stderr}")
-                return False
+                # Try to restart daemon and retry once
+                print("Attempting to restart swww daemon...")
+                subprocess.run(['pkill', 'swww-daemon'], capture_output=True)
+                subprocess.run(['swww-daemon'], capture_output=True, timeout=5)
+                time.sleep(2)
+                
+                retry_result = subprocess.run([
+                    'swww', 'img', wallpaper_path,
+                    '--transition-type=fade', '--transition-duration=1'
+                ], capture_output=True, text=True, timeout=10)
+                
+                if retry_result.returncode == 0:
+                    print(f"✓ Wallpaper set on retry: {wallpaper_path}")
+                    return True
+                else:
+                    print(f"✗ Retry failed: {retry_result.stderr}")
+                    return False
                 
         except subprocess.TimeoutExpired:
             print("✗ Wallpaper setting timed out")
             return False
         except FileNotFoundError:
-            print("✗ hyprctl not found - wallpaper setting skipped")
+            print("✗ swww not found - install with: yay -S swww")
             return False
         except Exception as e:
             print(f"✗ Error setting wallpaper: {e}")
