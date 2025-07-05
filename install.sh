@@ -55,6 +55,8 @@ PACKAGES=(
     "curl"
     "wget"
     "unzip"
+    "playerctl"                      # Media player control
+    "brightnessctl"                  # Screen brightness control
     
     # Optional apps
     "brave-bin"
@@ -63,6 +65,8 @@ PACKAGES=(
     "grim"
     "slurp"
     "wl-clipboard"
+    "polkit-gnome"
+    "network-manager-applet"
     
     # Image tools for AI Themer
     "imagemagick"
@@ -86,6 +90,7 @@ AUR_PACKAGES=(
     "wlogout"
     "python-colorspacious"
     "ttf-material-design-icons"      # Additional icon fonts
+    "cliphist"                       # Clipboard history manager
 )
 
 # Install packages
