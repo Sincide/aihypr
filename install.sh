@@ -139,6 +139,18 @@ else
     echo "   ⚠️  AI Themer CLI failed - some dependencies might be missing"
 fi
 
+# Test color extraction and JSON serialization
+echo "   Testing color extraction..."
+if [ -f "../wallpapers/nature/graveyard.png" ]; then
+    if python test_color_extraction.py > /dev/null 2>&1; then
+        echo "   ✅ Color extraction and JSON serialization working"
+    else
+        echo "   ⚠️  Color extraction test failed - check dependencies"
+    fi
+else
+    echo "   ⚠️  No test image found - color extraction test skipped"
+fi
+
 # Create Rofi launcher script
 echo "   Creating Rofi launcher script..."
 mkdir -p ~/.local/bin

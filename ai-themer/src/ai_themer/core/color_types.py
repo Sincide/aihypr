@@ -45,11 +45,12 @@ class SemanticColor:
     
     def __post_init__(self):
         """Validate color values after initialization."""
-        self.r = max(0, min(255, self.r))
-        self.g = max(0, min(255, self.g)) 
-        self.b = max(0, min(255, self.b))
-        self.alpha = max(0, min(255, self.alpha))
-        self.confidence = max(0.0, min(1.0, self.confidence))
+        # Convert all values to native Python types and validate
+        self.r = int(max(0, min(255, self.r)))
+        self.g = int(max(0, min(255, self.g)))
+        self.b = int(max(0, min(255, self.b)))
+        self.alpha = int(max(0, min(255, self.alpha)))
+        self.confidence = float(max(0.0, min(1.0, self.confidence)))
     
     @property
     def hex(self) -> str:
@@ -276,17 +277,17 @@ class ColorPalette:
             'colors': {
                 role.value: {
                     'hex': color.hex,
-                    'rgb': color.rgb,
-                    'hsl': color.hsl,
-                    'confidence': color.confidence
+                    'rgb': [int(color.r), int(color.g), int(color.b)],  # Convert to native Python ints
+                    'hsl': [float(color.hsl[0]), float(color.hsl[1]), float(color.hsl[2])],  # Convert to native Python floats
+                    'confidence': float(color.confidence)
                 }
                 for role, color in self.colors.items()
             },
             'metadata': {
                 'source_image': self.source_image,
                 'extraction_method': self.extraction_method,
-                'quality_score': self.quality_score,
-                'contrast_ratios': self.validate_contrast(),
+                'quality_score': float(self.quality_score) if self.quality_score is not None else None,
+                'contrast_ratios': {k: float(v) for k, v in self.validate_contrast().items()},
                 'accessibility_compliant': self.meets_accessibility_standards()
             }
         }

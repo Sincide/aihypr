@@ -143,7 +143,8 @@ class ColorExtractor:
             # Clip values to valid range and convert to 0-255
             rgb_normalized = np.clip(rgb_normalized, 0, 1)
             rgb = (rgb_normalized * 255).astype(int)
-            rgb_colors.append(tuple(rgb))
+            # Convert numpy types to native Python types
+            rgb_colors.append((int(rgb[0]), int(rgb[1]), int(rgb[2])))
         
         return rgb_colors
     
@@ -158,7 +159,8 @@ class ColorExtractor:
         
         # Get cluster centers (dominant colors)
         colors = kmeans.cluster_centers_.astype(int)
-        return [tuple(color) for color in colors]
+        # Convert numpy types to native Python types
+        return [(int(color[0]), int(color[1]), int(color[2])) for color in colors]
     
     def _extract_median_cut(self, image: Image.Image, num_colors: int) -> List[Tuple[int, int, int]]:
         """
