@@ -28,8 +28,6 @@
 - **Hyprland**: Window manager colors, borders, decorations
 - **Alacritty**: Terminal color schemes with full 16-color palette
 - **Rofi**: Launcher themes with comprehensive state styling
-- **Waybar**: Status bar theming (ready for implementation)
-- **Fish Shell**: Shell colors and prompt theming (ready for implementation)
 - **Extensible**: Easy to add new applications via templates
 
 ### 🛡️ Robust System Management
@@ -147,10 +145,8 @@ templates/
 │   └── colors.conf.j2
 ├── alacritty/
 │   └── colors.toml.j2
-├── rofi/
-│   └── colors.rasi.j2
-└── waybar/
-    └── colors.css.j2
+└── rofi/
+    └── colors.rasi.j2
 ```
 
 ### Template Variables
@@ -244,10 +240,7 @@ ai-themer/
 ├── templates/                    # Application config templates
 │   ├── hyprland/
 │   ├── alacritty/
-│   ├── rofi/
-│   └── waybar/
-├── tests/
-│   └── test_simulation.py        # Comprehensive testing
+│   └── rofi/
 ├── demo_simulation.py            # Working demonstration
 └── pyproject.toml               # Project configuration
 ```

@@ -111,25 +111,6 @@ class ThemeApplier:
             reload_command=None,  # Rofi reads config on each launch
             reload_delay=0.0
         )
-        
-        # Waybar
-        self.applications["waybar"] = ApplicationConfig(
-            name="waybar",
-            template_path="waybar/colors.css.j2",
-            output_path=os.path.join(home, ".config/waybar/colors.css"),
-            reload_command="killall waybar; waybar &",
-            reload_delay=2.0,
-            requires_restart=True
-        )
-        
-        # Fish shell
-        self.applications["fish"] = ApplicationConfig(
-            name="fish",
-            template_path="fish/colors.fish.j2",
-            output_path=os.path.join(home, ".config/fish/colors.fish"),
-            reload_command="fish -c 'source ~/.config/fish/colors.fish'",
-            reload_delay=0.5
-        )
     
     def apply_theme(self, 
                    palette: ColorPalette,

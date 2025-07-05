@@ -56,8 +56,6 @@ When you select a wallpaper:
 - ✅ **Hyprland** - Window borders update (1 second)
 - ✅ **Alacritty** - All terminals change colors immediately
 - ✅ **Rofi** - Next launch uses new theme
-- ✅ **Waybar** - Status bar restarts with new colors (2 seconds)
-- ✅ **Fish Shell** - Prompt colors update in all terminals
 
 ## Tips
 
