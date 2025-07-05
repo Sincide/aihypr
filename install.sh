@@ -142,11 +142,16 @@ fi
 # Create Rofi launcher script
 echo "   Creating Rofi launcher script..."
 mkdir -p ~/.local/bin
+mkdir -p ~/.cache/rofi
 cat > ~/.local/bin/ai-themer-pick << EOF
 #!/bin/bash
 # AI Themer Rofi Wallpaper Picker
+# Suppress Python warnings and ensure config directory exists
+export PYTHONWARNINGS="ignore::SyntaxWarning"
+mkdir -p ~/.config/ai-themer
+mkdir -p ~/.cache/rofi
 cd "$SCRIPT_DIR/ai-themer"
-python -m src.ai_themer.cli pick --wallpaper-dir ../wallpapers/
+python -m src.ai_themer.rofi_picker "../wallpapers/"
 EOF
 chmod +x ~/.local/bin/ai-themer-pick
 echo "   ✅ Rofi launcher created at ~/.local/bin/ai-themer-pick"

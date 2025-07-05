@@ -310,6 +310,11 @@ python -m src.ai_themer.rofi_picker "{wallpaper_dir}"
 
 if __name__ == "__main__":
     import sys
+    import warnings
+    
+    # Suppress warnings from colorspacious library
+    warnings.filterwarnings("ignore", message="invalid escape sequence")
+    warnings.filterwarnings("ignore", category=SyntaxWarning)
     
     if len(sys.argv) < 2:
         print("Usage: python -m ai_themer.rofi_picker <wallpaper_dir>")
@@ -321,6 +326,9 @@ if __name__ == "__main__":
     ai_themer_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
     template_dir = os.path.join(ai_themer_dir, "templates")
     config_dir = os.path.expanduser("~/.config/ai-themer")
+    
+    # Ensure config directory exists before any logging
+    os.makedirs(config_dir, exist_ok=True)
     
     # Run picker
     picker = RofiWallpaperPicker(wallpaper_dir, template_dir, config_dir)

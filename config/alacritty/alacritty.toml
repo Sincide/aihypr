@@ -1,6 +1,7 @@
 # Alacritty Configuration
 # https://alacritty.org/config-alacritty.html
 
+[general]
 import = ["colors.toml"]
 
 [env]

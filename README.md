@@ -58,8 +58,8 @@ A comprehensive, modular dotfiles configuration for Arch Linux featuring Hyprlan
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/aihypr.git ~/aihypr
-   cd ~/aihypr
+   git clone https://github.com/yourusername/aihypr.git
+   cd aihypr
    ```
 
 2. **Run the installation script**:
@@ -78,7 +78,7 @@ A comprehensive, modular dotfiles configuration for Arch Linux featuring Hyprlan
 1. **Add wallpapers** to get started:
    ```bash
    # Add your wallpapers to appropriate categories
-   cp your-wallpaper.jpg ~/aihypr/wallpapers/nature/
+   cp your-wallpaper.jpg ./wallpapers/nature/
    ```
 
 2. **Launch the wallpaper picker**:
@@ -369,10 +369,10 @@ q - Quit
 1. **Organize by category**:
    ```bash
    # Nature wallpapers
-   cp nature-wallpaper.jpg ~/aihypr/wallpapers/nature/
+   cp nature-wallpaper.jpg ./wallpapers/nature/
    
    # Cyberpunk wallpapers
-   cp cyberpunk-wallpaper.jpg ~/aihypr/wallpapers/cyberpunk/
+   cp cyberpunk-wallpaper.jpg ./wallpapers/cyberpunk/
    ```
 
 2. **Supported formats**: JPG, PNG, WebP
@@ -484,7 +484,7 @@ rm -rf ~/.cache/rofi
 #### AI Themer Not Working
 ```bash
 # Check Python dependencies
-cd ~/aihypr/ai-themer
+cd ai-themer
 python -m src.ai_themer.cli --help
 
 # Test with demo
